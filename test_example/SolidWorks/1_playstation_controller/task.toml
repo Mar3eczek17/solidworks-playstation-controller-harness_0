@@ -1,0 +1,161 @@
+schema_version = "1.4"
+
+[task]
+name = "storygold/solidworks-0001-playstation-controller"
+version = "1.0.0"
+description = "Make design edits while preserving design intent and feature tree references"
+keywords = ["solidworks", "cad", "design_iteration"]
+
+[[task.authors]]
+name = "StoryGold"
+
+[metadata]
+complete = true
+program = "SolidWorks"
+category = "design_iteration"
+units = "mm"
+human_baseline_minutes = 240
+max_score = 4
+
+notes = "PS3 controller (replaces the retired Xbox variant, whose surfacing broke during the engineer's edit). Mirror plane is x=80.5mm, not x=0. Grading is geometry-only and id/name-independent: roles (housing/dpad/face_buttons/ sticks/triggers/bumpers/centre) are assigned geometrically per capture. Widen is graded as mirror-pair separation growth (+15mm), robust to the housing remodel. The naive-flip guard is the port-light glyph cluster (a one-sided housing feature re-found by its mirror-invariant area multiset; it must stay on its original side). PS symbol glyphs are left-right symmetric, so symbol chirality is UNVERIFIABLE by design. Harness grades the active SolidWorks document, or a path passed as argv[1]. Baseline frozen via `harness.py --capture-baseline prompt/input.SLDPRT`.\n"
+output_modality = "cad"
+accepted_output_formats = ["sldprt"]
+reference = ["solution/solution.SLDPRT"]
+
+[metadata.harness]
+entrypoint = "harness/harness.py"
+timeout_s = 300.0
+requires_solidworks = true
+requires_freecad = false
+requires_llm = false
+
+[[metadata.inputs]]
+path = "environment/input.SLDPRT"
+format = "sldprt"
+role = "primary"
+
+[[metadata.inputs]]
+path = "tests/task/prompt/input.json"
+format = "json"
+role = "baseline_measurements"
+
+[[metadata.scoring_components]]
+name = "widened by 15 mm"
+weight = 1.0
+
+[[metadata.scoring_components]]
+name = "clusters at mirrored positions"
+weight = 1.0
+
+[[metadata.scoring_components]]
+name = "no new control interference"
+weight = 1.0
+
+[[metadata.scoring_components]]
+name = "left-handed layout achieved"
+weight = 1.0
+
+[[metadata.scoring_components]]
+name = "no unrequested changes"
+weight = 0.0
+
+[metadata.examples]
+"examples/adversarial_widened_15mm_clusters_at_original_spacing.SLDPRT" = "widened 15 mm but clusters left at original spacing"
+"examples/adversarial_unwidened_shell_with_correct_clusters.SLDPRT" = "clusters swapped correctly on an unwidened shell"
+"examples/adversarial_widened_by_30mm.SLDPRT" = "widened 30 mm instead of 15"
+"examples/adversarial_text_mirrored_incorrectly.SLDPRT" = "text mirrored incorrectly"
+"examples/adversarial_only_one_button_cluster_mirrored.SLDPRT" = "only one button cluster moved across"
+"examples/gpt5.SLDPRT" = "GPT-5 attempt"
+"examples/adversarial_feature_tree_with_errors.SLDPRT" = "feature tree riddled with rebuild errors and dangling references"
+
+[[metadata.assets]]
+path = "environment/input.SLDPRT"
+url = "https://openaievalsetub0ktk.blob.core.windows.net/assets/SolidWorks/1_playstation_controller/environment/input.SLDPRT"
+sha256 = "cfb3c18638106b302f106a1429759445330757f6e055e0c47a31a7a7a3e51192"
+bytes = 11588163
+
+[[metadata.assets]]
+path = "examples/gpt5.SLDPRT"
+url = "https://openaievalsetub0ktk.blob.core.windows.net/assets/SolidWorks/1_playstation_controller/examples/gpt5.SLDPRT"
+sha256 = "414431a1b487c44c5a928e70bedd59a3240ffe6079eba3cdd6f0ff752cdc809a"
+bytes = 11523905
+
+[[metadata.assets]]
+path = "examples/solution.SLDPRT"
+url = "https://openaievalsetub0ktk.blob.core.windows.net/assets/SolidWorks/1_playstation_controller/examples/solution.SLDPRT"
+sha256 = "c6e54e3a7832d99ac0edbab8aaae5133c6de682e8ec0df00f8e319d87d02721c"
+bytes = 25061457
+
+[[metadata.assets]]
+path = "solution/solution.SLDPRT"
+url = "https://openaievalsetub0ktk.blob.core.windows.net/assets/SolidWorks/1_playstation_controller/solution/solution.SLDPRT"
+sha256 = "c6e54e3a7832d99ac0edbab8aaae5133c6de682e8ec0df00f8e319d87d02721c"
+bytes = 25061457
+
+[[metadata.assets]]
+path = "examples/adversarial_feature_tree_with_errors.SLDPRT"
+url = "https://openaievalsetub0ktk.blob.core.windows.net/assets/SolidWorks/1_playstation_controller/examples/adversarial_feature_tree_with_errors.SLDPRT"
+sha256 = "9ae45d3063efa048e8761cb3f3de56b2fa70af83964a87d39814f9977e353dfe"
+bytes = 40031068
+
+[[metadata.assets]]
+path = "examples/adversarial_only_one_button_cluster_mirrored.SLDPRT"
+url = "https://openaievalsetub0ktk.blob.core.windows.net/assets/SolidWorks/1_playstation_controller/examples/adversarial_only_one_button_cluster_mirrored.SLDPRT"
+sha256 = "54f6952da5ef87cdb7fddabfbed33ae5f83ad5f9d3af29e382d246dc025f3c3c"
+bytes = 23534759
+
+[[metadata.assets]]
+path = "examples/adversarial_text_mirrored_incorrectly.SLDPRT"
+url = "https://openaievalsetub0ktk.blob.core.windows.net/assets/SolidWorks/1_playstation_controller/examples/adversarial_text_mirrored_incorrectly.SLDPRT"
+sha256 = "24233d03225d90d72aa4da163389dd63306be28bc7842e3246c3bfe9f316ba05"
+bytes = 24283351
+
+[[metadata.assets]]
+path = "examples/adversarial_unwidened_shell_with_correct_clusters.SLDPRT"
+url = "https://openaievalsetub0ktk.blob.core.windows.net/assets/SolidWorks/1_playstation_controller/examples/adversarial_unwidened_shell_with_correct_clusters.SLDPRT"
+sha256 = "9bcc77111785c051283fe69f8c5f94ed3379fc35627128efb24bd34c08e67484"
+bytes = 20764492
+
+[[metadata.assets]]
+path = "examples/adversarial_widened_15mm_clusters_at_original_spacing.SLDPRT"
+url = "https://openaievalsetub0ktk.blob.core.windows.net/assets/SolidWorks/1_playstation_controller/examples/adversarial_widened_15mm_clusters_at_original_spacing.SLDPRT"
+sha256 = "8c22247f0663db308031d4498dcbeb6742238785ef046102fe467de881a80151"
+bytes = 12022558
+
+[[metadata.assets]]
+path = "examples/adversarial_widened_by_30mm.SLDPRT"
+url = "https://openaievalsetub0ktk.blob.core.windows.net/assets/SolidWorks/1_playstation_controller/examples/adversarial_widened_by_30mm.SLDPRT"
+sha256 = "27533cf1aebb6cbec19db5b98877b295b42014a537845c5ab1f07106d83a1c15"
+bytes = 34215470
+
+[verifier]
+# TODO: verifier.environment_mode -- the harness grades whatever SolidWorks
+# document is currently open via COM (pywin32), not a file handed to a
+# headless verifier process. Decide once the real Windows+SolidWorks
+# environment exists whether verification runs "shared" with the agent's
+# live SolidWorks session or some other arrangement Harbor doesn't
+# currently model for GUI apps.
+timeout_sec = 1200.0
+
+[verifier.env]
+
+[agent]
+timeout_sec = 1200.0
+# TODO: user -- which Windows user account the agent (and SolidWorks) run
+# as. Depends on how SolidWorks licensing/activation is set up on the
+# target machine.
+
+[environment]
+os = "windows"
+network_mode = "public"
+build_timeout_sec = 1200.0
+# TODO: cpus / memory / storage -- SolidWorks' real resource needs on the
+# target Windows host aren't known from here.
+
+[environment.env]
+# TODO: FREECAD-style env var isn't applicable; SolidWorks is driven via
+# COM (win32com.client.Dispatch("SldWorks.Application")), which needs a
+# running, licensed SolidWorks process -- not an env var pointing at a
+# binary.
+
+[solution.env]
