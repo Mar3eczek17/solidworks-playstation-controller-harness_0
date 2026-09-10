@@ -27,7 +27,7 @@ Inside `SolidWorks/1_playstation_controller/`:
 | `task.toml` | Task definition: metadata, scoring components, asset URLs/checksums, environment config. |
 | `environment/` | The starting part (`input.SLDPRT`) and a (non-runnable, see below) Dockerfile. |
 | `solution/` | The reference answer (`solution.SLDPRT`) — the "right" edit, which should score full marks. |
-| `examples/` | Candidate parts to **test the harness against**: mostly adversarial near-misses (widened but clusters unmoved, naive geometric flip, 30 mm instead of 15, rebuild-error-riddled trees, …). |
+| `examples/` | Candidate parts to **test the harness against**, one subfolder per example (`examples/<name>/<name>.SLDPRT`, with an `.STL` mesh and `.png` render beside it): mostly adversarial near-misses (widened but clusters unmoved, 30 mm instead of 15, only one cluster moved, missing glyphs, an unrequested change elsewhere, rebuild-error-riddled trees, …). |
 | `tests/` | The harness to update/rewrite (`tests/task/harness/harness.py`), along with frozen baseline measurements of the input part (`tests/task/prompt/input.json`) and the verifier entrypoint (`test.sh`). |
 
 Shared measurement/capture/scoring code used by harnesses lives in `common/` (`solidworks_measure.py`, `solidworks_capture.py`, `harness_base.py`, …).
@@ -36,7 +36,7 @@ Shared measurement/capture/scoring code used by harnesses lives in `common/` (`s
 
 The harness grades **geometry only** (mass properties, centroids, face areas), never feature or body names — candidates may remodel freely. It scores against the components declared in `task.toml` (`[[metadata.scoring_components]]`) and prints a JSON score envelope (`{"score", "max_score", "passed", "subscores"}`; see `common/harness_base.py`). The scoring components themselves are also yours to edit: if you split, merge, reweight, or add components while reworking the harness, update `[[metadata.scoring_components]]` in `task.toml` to match — the two must stay in sync.
 
-To validate a harness, run it over `solution/solution.SLDPRT` (should score full marks) and every file in `examples/`.
+To validate a harness, run it over `solution/solution.SLDPRT` (should score full marks) and every `.SLDPRT` under `examples/`.
 
 ## Running it — Windows + SolidWorks required
 
