@@ -39,26 +39,6 @@ path = "tests/task/prompt/input.json"
 format = "json"
 role = "baseline_measurements"
 
-[[metadata.scoring_components]]
-name = "widened by 15 mm"
-weight = 1.0
-
-[[metadata.scoring_components]]
-name = "clusters at mirrored positions"
-weight = 1.0
-
-[[metadata.scoring_components]]
-name = "no new control interference"
-weight = 1.0
-
-[[metadata.scoring_components]]
-name = "left-handed layout achieved"
-weight = 1.0
-
-[[metadata.scoring_components]]
-name = "no unrequested changes"
-weight = 0.0
-
 [metadata.examples]
 "examples/adversarial_widened_15mm_clusters_at_original_spacing/adversarial_widened_15mm_clusters_at_original_spacing.SLDPRT" = "widened 15 mm but clusters left at original spacing"
 "examples/adversarial_unwidened_shell_with_correct_clusters/adversarial_unwidened_shell_with_correct_clusters.SLDPRT" = "clusters swapped correctly on an unwidened shell"

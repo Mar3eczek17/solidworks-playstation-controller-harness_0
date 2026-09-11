@@ -9,7 +9,7 @@ A grading harness for `SolidWorks/1_playstation_controller`, implemented appropr
 - **passes the reference**: `solution/solution.SLDPRT` scores full marks;
 - **fails the adversarials**: every `.SLDPRT` under `examples/` loses points on the component(s) it actually gets wrong, and only those.
 
-"Implemented appropriately" means the harness grades the geometry the instruction asks for, not names, feature-tree structure, or coincidences of the reference file, so that a candidate who solves the task a different way still scores full marks. Keep `[[metadata.scoring_components]]` in `task.toml` in sync with whatever components your harness emits, and include a short note on what you changed and why, plus the score envelopes from running it over the reference and every example if you have access to SolidWorks.
+"Implemented appropriately" means the harness grades the geometry the instruction asks for, not names, feature-tree structure, or coincidences of the reference file, so that a candidate who solves the task a different way still scores full marks. Include a short note on what you changed and why, plus the score envelopes from running it over the reference and every example if you have access to SolidWorks.
 
 ## First step: fetch the assets
 
@@ -43,7 +43,7 @@ Shared measurement/capture/scoring code used by harnesses lives in `common/` (`s
 
 ## The harness
 
-The harness grades **geometry only** (mass properties, centroids, face areas), never feature or body names — candidates may remodel freely. It scores against the components declared in `task.toml` (`[[metadata.scoring_components]]`) and prints a JSON score envelope (`{"score", "max_score", "passed", "subscores"}`; see `common/harness_base.py`). The scoring components themselves are also yours to edit: if you split, merge, reweight, or add components while reworking the harness, update `[[metadata.scoring_components]]` in `task.toml` to match — the two must stay in sync.
+The harness grades **geometry only** (mass properties, centroids, face areas), never feature or body names — candidates may remodel freely. It scores a set of named components, each weighted, and prints a JSON score envelope (`{"score", "max_score", "passed", "subscores"}`; see `common/harness_base.py`). The components and their weights live in the harness and are yours to edit: split, merge, reweight, or add them as the rubric needs, keeping `max_score` in `task.toml` equal to their sum.
 
 To validate a harness, run it over `solution/solution.SLDPRT` (should score full marks) and every `.SLDPRT` under `examples/`.
 
@@ -53,5 +53,6 @@ SolidWorks cannot run headlessly or in a container: the harness drives a live, l
 
 ```bat
 cd SolidWorks\1_playstation_controller
-python tests\task\harness\harness.py path\to\candidate.SLDPRT
+python tests\task\harness\harness.py solution\solution.SLDPRT
+python tests\task\harness\harness.py examples\adversarial_widened_by_30mm\adversarial_widened_by_30mm.SLDPRT
 ```
