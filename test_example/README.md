@@ -2,6 +2,15 @@
 
 A test RL environment containing a single SolidWorks CAD task: `SolidWorks/1_playstation_controller`. The goal of this repo is to **update — and potentially completely rewrite — the currently AI-generated grading harness** for the task: the script that scores a candidate `.SLDPRT` part against the task's rubric. The current harness at `tests/task/harness/harness.py` is the starting point, not a fixed reference; treat it as replaceable so long as the grading contract below is honored.
 
+## Deliverable
+
+A grading harness for `SolidWorks/1_playstation_controller`, implemented appropriately for the task, that:
+
+- **passes the reference**: `solution/solution.SLDPRT` scores full marks;
+- **fails the adversarials**: every `.SLDPRT` under `examples/` loses points on the component(s) it actually gets wrong, and only those.
+
+"Implemented appropriately" means the harness grades the geometry the instruction asks for, not names, feature-tree structure, or coincidences of the reference file, so that a candidate who solves the task a different way still scores full marks. Keep `[[metadata.scoring_components]]` in `task.toml` in sync with whatever components your harness emits, and include a short note on what you changed and why, plus the score envelopes from running it over the reference and every example if you have access to SolidWorks.
+
 ## First step: fetch the assets
 
 The (very) large `.SLDPRT` files (input part, solution, examples) live in Azure Blob Storage, not git — the checkout only has their URLs and checksums in `task.toml`. Before doing anything else, run:
