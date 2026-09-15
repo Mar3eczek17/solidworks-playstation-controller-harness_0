@@ -45,6 +45,8 @@ Shared measurement/capture/scoring code used by harnesses lives in `common/` (`s
 
 The harness grades **geometry only** (mass properties, centroids, face areas), never feature or body names — candidates may remodel freely. It scores a set of named components, each weighted, and prints a JSON score envelope (`{"score", "max_score", "passed", "subscores"}`; see `common/harness_base.py`). The components and their weights live in the harness and are yours to edit: split, merge, reweight, or add them as the rubric needs, keeping `max_score` in `task.toml` equal to their sum.
 
+**Scores must be made continuous, not pass/fail.** Each component should produce a score on a continuous scale from 0 to 1, reflecting how close the candidate's geometry is to the target — e.g. scaled by relative error against a tolerance — rather than a binary pass/fail. A candidate that is slightly off should lose a little credit, and one that is far off should lose most or all of it. The overall `score` is then the weighted sum of these continuous component scores.
+
 To validate a harness, run it over `solution/solution.SLDPRT` (should score full marks) and every `.SLDPRT` under `examples/`.
 
 ## Running it — Windows + SolidWorks required
