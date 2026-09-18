@@ -1,0 +1,6 @@
+# Harness / adversarial-suite scratch and output files
+_adv_progress.txt
+_drv_err.txt
+_drv_out.txt
+
+__pycache__/
