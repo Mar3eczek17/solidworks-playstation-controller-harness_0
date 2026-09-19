@@ -71,9 +71,10 @@ must stay limited to harness + task metadata.)
 
 Measured live on Windows against a licensed, running SolidWorks session
 (`python tests/task/harness/harness.py <model>.SLDPRT`); the harness prints
-`{"score", "max_score", "passed", "subscores"}`.  Both branches score
-identically: `main` and `developers` ship byte-identical harness/task files
-(only `.gitignore` differs) and the `.SLDPRT` models are untracked/shared.
+`{"score", "max_score", "passed", "subscores"}`.  The envelopes below come from
+**this** harness; the orphan `main` snapshot still ships the original
+5-criteria version of the same file, so it scores the models differently (see
+the branch comparison at the end of this section).
 
 | model | score | passed | components that lose credit |
 |---|---|---|---|
@@ -81,22 +82,44 @@ identically: `main` and `developers` ship byte-identical harness/task files
 | `adversarial_text_mirrored_incorrectly` | 3.0000 / 4.0 | false | `left-handed layout achieved` = 0.0 (one-sided glyph cluster changed sides) |
 | `adversarial_widened_by_30mm` | 3.0000 / 4.0 | false | `widened by 15 mm` = 0.0 (pairs grew 30 mm, not 15) |
 | `adversarial_widened_15mm_clusters_at_original_spacing` | 1.5667 / 4.0 | false | `widened by 15 mm` = 0.0, `clusters at mirrored positions` = 0.4, `no new control interference` = 0.0, `left-handed layout achieved` = 0.6667 |
-| `adversarial_only_one_button_cluster_mirrored` | *not measured live* | — | expected (offline mock, and by construction): `clusters at mirrored positions` and `left-handed layout achieved` lose part of their credit, because one diamond stays where it was while the other moves |
-| `adversarial_unrequested_change_elsewhere` | *not measured live* | — | expected: `no unrequested changes` loses the credit its shipped change earns; the change is invisible to the other components by design |
+| `adversarial_only_one_button_cluster_mirrored` | 2.7888 / 4.0 | false | `clusters at mirrored positions` and `left-handed layout achieved` lose part of their credit: one diamond (and the labels on its side) stays where it was while the other moves |
+| `adversarial_unrequested_change_elsewhere` | 4.0000 / 4.0 | true | none — by design: the shipped change is not visible in mass properties, body boxes, spans or the graded bodies |
 | `adversarial_missing_glyphs` | 4.0000 / 4.0 | true | **none — see the asset caveat below** |
 | `adversarial_unwidened_shell_with_correct_clusters` | 0.0000 / 4.0 | false | all six: rebuild gate (34 new feature-tree errors vs a seed census of 0) |
-| `adversarial_feature_tree_with_errors` | *not measured live* | — | expected 0.0: rebuild gate (its tree is the one shipped riddled with errors) |
+| `adversarial_feature_tree_with_errors` | 0.0000 / 4.0 | false | all six: rebuild gate (its tree is the one shipped riddled with errors) |
 
-Rows marked *not measured live* are the three models that could not be run in
-this session: the SolidWorks session had to be relaunched, and the first
-`EditRebuild3()` on a cold session blocked for >12 minutes (the same stall the
-stage diagnostics exist to expose), so the batch was stopped rather than
-reported as a failure.  Re-running the same one-line command once SolidWorks is
-warm fills them in:
+All nine envelopes above are live measurements; the rows that were once marked
+*not measured live* (`only_one_button_cluster_mirrored`,
+`unrequested_change_elsewhere`, `feature_tree_with_errors`) were filled in on
+the same revision with the same one-line command, once SolidWorks was warm:
 
 ```powershell
 python tests\task\harness\harness.py examples\<name>\<name>.SLDPRT
 ```
+
+### Branch comparison (`main` vs `developers`)
+
+All nine models were also run live on the same machine against the orphan
+`main` snapshot, which ships the *original* 5-criteria harness (binary
+components, `no unrequested changes` as a gate, no `glyphs preserved`,
+`max_score = 4.0`):
+
+| model | `main` | `developers` |
+|---|---|---|
+| `solution` | **2.0000** | **4.0000** |
+| `adversarial_feature_tree_with_errors` | 0.0000 | 0.0000 |
+| `adversarial_missing_glyphs` | 4.0000 | 4.0000 |
+| `adversarial_only_one_button_cluster_mirrored` | 2.0000 | 2.7888 |
+| `adversarial_text_mirrored_incorrectly` | 3.0000 | 3.0000 |
+| `adversarial_unrequested_change_elsewhere` | 4.0000 | 4.0000 |
+| `adversarial_unwidened_shell_with_correct_clusters` | 0.0000 | 0.0000 |
+| `adversarial_widened_15mm_clusters_at_original_spacing` | 0.0000 | 1.5667 |
+| `adversarial_widened_by_30mm` | 2.0000 | 3.0000 |
+
+The point of the comparison is the first row: the original harness **does not
+pass the reference** (`2.0000`, `passed=false`), while the fixed one does
+(`4.0000`, `passed=true`).  The other deltas are the move from binary to
+continuous credit for partially-wrong geometry.
 
 ## Caveats, stated plainly
 
