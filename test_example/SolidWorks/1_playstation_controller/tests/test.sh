@@ -12,7 +12,14 @@
 #   python tests/task/harness/harness.py
 #
 # It prints a JSON score envelope to stdout (see common/harness_base.py's
-# finalize()): {"score": ..., "max_score": 5, "passed": ..., "subscores": {...}}
+# finalize()): {"score": ..., "max_score": 4, "passed": ..., "subscores": {...}}
+# Components are continuous (0..1) and weighted to sum to 4.0:
+#   widened by 15 mm                 w=1.0
+#   clusters at mirrored positions   w=1.0
+#   left-handed layout achieved      w=1.0
+#   no new control interference      w=0.5
+#   no unrequested changes           w=0.25
+#   glyphs preserved                 w=0.25
 set -euo pipefail
 echo "TODO: no automated verifier here -- see comments in this file" >&2
 mkdir -p /logs/verifier 2>/dev/null || true
